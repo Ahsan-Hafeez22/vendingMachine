@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">vending_machine</string>
+    <string name="balance">Balance:</string>
+    <string name="confirm">Confirm</string>
+    <string name="logout">Logout</string>
+    <string name="enter_balance_for_shopping">Enter balance for Shopping</string>
+    <string name="let_s_join_us_and_build_your_relation_with_others">Let\'s join us and build your relation with others</string>
+    <string name="enter_amount">Enter Amount</string>
+    <string name="amount_type">(amount: 10, 20, 50, 100, 500, 1000)</string>
+    <string name="login">Login</string>
+    <string name="join">Let\'s join us and build your relation with others</string>
+    <string name="your_email">Your email</string>
+    <string name="password">Password</string>
+    <string name="sign_up">Sign up</string>
+    <string name="register">Register</string>
+    <string name="your_name">Your name</string>
+    <string name="re_type_password">Re type Password</string>
+    <string name="cancel">Cancel</string>
+    <string name="vending_machine">Vending Machine</string>
+    <string name="todo">TODO</string>
+    <string name="item_text">Item Text</string>
+    <string name="price">Price:</string>
+    <string name="_000">000</string>
+    <string name="quantity">Quantity:</string>
+</resources>
