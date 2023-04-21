@@ -7,106 +7,56 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity {
-
-    ArrayList<String> items = new ArrayList<>();
-    ArrayList<Integer> images = new ArrayList<>();
-    ArrayList<Integer> price = new ArrayList<>();
-    ArrayList<Integer> quantity = new ArrayList<>();
-    ListView listview;
-    TextView balance_amount, txt;
+    int balance_value;
+    TextView balance_amount;
     Button confirm, lgout;
     SharedPreferences pref;
-
-
-
+    private final ArrayList<Product> productList = new ArrayList<>();
+    ListView listview;
+    CustomBaseAdaptor customBaseAdaptor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        listview = findViewById(R.id.custom_list_view);
         initComponents();
         settingUpListeners();
+        initItems();
 
-        items.add("Lays");
-        images.add(R.drawable.lays);
-        price.add(30);
-        quantity.add(5);
-
-        items.add("Cheetos");
-        images.add(R.drawable.cheetos);
-        price.add(45);
-        quantity.add(4);
-
-        items.add("Kurkure");
-        images.add(R.drawable.kurkure);
-        price.add(30);
-        quantity.add(2);
-
-        items.add("Pringles");
-        images.add(R.drawable.pringles);
-        price.add(80);
-        quantity.add(4);
-
-        items.add("Water");
-        images.add(R.drawable.water);
-        price.add(35);
-        quantity.add(4);
-
-        items.add("Coke");
-        images.add(R.drawable.coke);
-        price.add(45);
-        quantity.add(4);
-
-        items.add("Sprite");
-        images.add(R.drawable.sprite);
-        price.add(45);
-        quantity.add(2);
-
-        items.add("Fanta");
-        images.add(R.drawable.fanta);
-        price.add(45);
-        quantity.add(3);
-
-        items.add("Kitkat");
-        images.add(R.drawable.kitkat);
-        price.add(70);
-        quantity.add(4);
-
-        items.add("Bounty");
-        images.add(R.drawable.bounty);
-        price.add(70);
-        quantity.add(4);
-
-        items.add("Flakes");
-        images.add(R.drawable.flakes);
-        price.add(80);
-        quantity.add(3);
-
-        items.add("Snickers");
-        images.add(R.drawable.snickers);
-        price.add(80);
-        quantity.add(1);
-
-
-        listview = (ListView) findViewById(R.id.custom_list_view);
-        CustomBaseAdaptor customBaseAdaptor = new CustomBaseAdaptor(this, items, images, price, quantity);
+        customBaseAdaptor = new CustomBaseAdaptor(this, productList);
         listview.setAdapter(customBaseAdaptor);
 
     }
-
+    private void initItems() {
+        productList.add(new Product("Lays",30, R.drawable.lays, 5));
+        productList.add(new Product("Cheetos",50, R.drawable.cheetos, 4));
+        productList.add(new Product("Kurkure",30, R.drawable.kurkure, 5));
+        productList.add(new Product("Pringles",90, R.drawable.pringles, 2));
+        productList.add(new Product("Water",45, R.drawable.water, 0));
+        productList.add(new Product("Coke",45, R.drawable.coke, 2));
+        productList.add(new Product("Sprite",45, R.drawable.sprite, 2));
+        productList.add(new Product("Fanta",45, R.drawable.fanta, 2));
+        productList.add(new Product("Bounty",75, R.drawable.bounty, 2));
+        productList.add(new Product("Kitkat",80, R.drawable.kitkat, 2));
+        productList.add(new Product("Flakes",50, R.drawable.flakes, 2));
+        productList.add(new Product("Snickers",100, R.drawable.snickers, 2));
+    }
 
     @SuppressLint("SetTextI18n")
     private void settingUpListeners() {
         Intent intent = getIntent();
-        int value = intent.getIntExtra("key", 0);
-        String newText = String.valueOf(value);
+        balance_value = intent.getIntExtra("key", 0);
+        String newText = String.valueOf(balance_value);
         balance_amount.setText(newText+"Rs" );
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,20 +74,41 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(Ilogout);
             }
         });
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Product itemIndex = productList.get(position);
+                        int productPrice = itemIndex.getPrice();
+                        int productQuantity = itemIndex.getQuantity();
+                        if (productPrice > balance_value){
+                            Toast.makeText(HomeActivity.this, "Insufficient balance", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            if (productQuantity > 0) {
+                                int newValue = balance_value - itemIndex.getPrice();
+                                String newText = String.valueOf(newValue);
+                                itemIndex.setQuantity(productQuantity - 1);
+                                balance_value -= productPrice;
+                                balance_amount.setText(balance_value + "Rs");
+                                customBaseAdaptor.notifyDataSetChanged();
+                            }
+                            else  {
+                                Toast.makeText(HomeActivity.this, "Product out of Stock", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                    }
+                });
+            }
+
+        });
     }
-    /*
-int index = 1; // index of the element to decrement
-int decrementBy = 3; // amount to decrement by
-
-int oldValue = numbers.get(index); // get the current value
-int newValue = oldValue - decrementBy; // calculate the new value
-
-numbers.set(index, newValue); // set the new value at the specified index*/
-
     private void initComponents() {
         balance_amount = findViewById(R.id.amount);
         confirm = findViewById(R.id.item_confirm_button);
-        txt = findViewById(R.id.itemText);
         lgout = findViewById(R.id.logout);
         pref = getSharedPreferences("user_info", 0);
 
