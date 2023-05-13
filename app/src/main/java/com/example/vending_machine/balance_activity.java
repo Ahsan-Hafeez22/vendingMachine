@@ -25,7 +25,7 @@ public class balance_activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 int balance = Integer.parseInt(cash.getText().toString());
-                if(balance>0 && balance%5==0 && balance<=1000) {
+                if(balance > 0 && (balance == 10 || balance == 20 || balance == 50|| balance == 100|| balance == 500|| balance == 1000)) {
                     Intent i = new Intent(balance_activity.this, HomeActivity.class);
                     i.putExtra("key", balance);
                     startActivity(i);

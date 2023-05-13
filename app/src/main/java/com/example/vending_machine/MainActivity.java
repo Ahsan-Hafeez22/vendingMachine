@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         Boolean check = pref.getBoolean("flag", false);
         Intent iNext;
         if (check) {//already logged in
-            iNext = new Intent(MainActivity.this, splash.class);
+            iNext = new Intent(MainActivity.this, balance_activity.class);
             startActivity(iNext);
         }
     }
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putBoolean("flag", true);
                     editor.apply();
-                    Intent i_register = new Intent(MainActivity.this, splash.class);
+                    Intent i_register = new Intent(MainActivity.this, balance_activity.class);
                     startActivity(i_register);
                 }
                 else {

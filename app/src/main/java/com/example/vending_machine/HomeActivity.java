@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -19,7 +22,7 @@ import java.util.ArrayList;
 public class HomeActivity extends AppCompatActivity {
     int balance_value;
     TextView balance_amount;
-    Button confirm, lgout;
+    Button confirm, lgout,ex;
     SharedPreferences pref;
     private final ArrayList<Product> productList = new ArrayList<>();
     ListView listview;
@@ -32,7 +35,6 @@ public class HomeActivity extends AppCompatActivity {
         initComponents();
         settingUpListeners();
         initItems();
-
         customBaseAdaptor = new CustomBaseAdaptor(this, productList);
         listview.setAdapter(customBaseAdaptor);
 
@@ -70,7 +72,7 @@ public class HomeActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putBoolean("flag", false);
                 editor.apply();
-                Intent Ilogout = new Intent(HomeActivity.this, MainActivity.class);
+                Intent Ilogout = new Intent(HomeActivity.this, splash.class);
                 startActivity(Ilogout);
             }
         });
@@ -99,17 +101,20 @@ public class HomeActivity extends AppCompatActivity {
                                 Toast.makeText(HomeActivity.this, "Product out of Stock", Toast.LENGTH_SHORT).show();
                             }
                         }
-
                     }
                 });
             }
-
+        });
+        ex.setOnClickListener(view -> {
+            Intent i = new Intent(HomeActivity.this, balance_activity.class);
+            startActivity(i);
         });
     }
     private void initComponents() {
         balance_amount = findViewById(R.id.amount);
         confirm = findViewById(R.id.item_confirm_button);
         lgout = findViewById(R.id.logout);
+        ex = findViewById(R.id.exit);
         pref = getSharedPreferences("user_info", 0);
 
     }
